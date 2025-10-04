@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+<script type="text/javascript" src="/ruxitagentjs_ICA7NQVfqrux_10321250808084810.js" data-dtconfig="rid=RID_2073545335|rpid=-2129935516|domain=byu.edu|reportUrl=/rb_bf19966hyx|app=1964a903cfe5f82b|owasp=1|featureHash=ICA7NQVfqrux|msl=153600|srsr=1000|rdnt=2|uxrgce=1|cuc=lg366a9h|srms=2,2,1,|mel=100000|expw=1|lastModification=1758576621134|tp=500,50,0|srbbv=2|agentUri=/ruxitagentjs_ICA7NQVfqrux_10321250808084810.js"></script></head>
+<body>
+  <p>Welcome to the practice program:</p>
+  <script>
+    movie_title = prompt("Enter a movie title: ");
+    let rating_1 = parseFloat(prompt("Enter a rating for reviewer 1: "));
+    let rating_2 = parseFloat(prompt("Enter a rating for reviewer 2: "));
+    let rating_3 = parseFloat(prompt("Enter a rating for reviewer 3: "));
+//calculate average
+    avg_rating = (rating_1 + rating_2 + rating_3) / 3;
+//logical message
+//     if (avg_rating >= 4.9)
+//   {
+//     alert("Best movie");
+//   }
+//     else if (avg_rating >= 4.5)
+//   {
+//     alert("Must see");
+//   }
+//     else if (avg_rating >= 4.0)
+//   {
+//     alert("Watch at least once");
+//   }
+//     else if (avg_rating < 4.0)
+//   {
+//     alert("Find a different movie");
+//   }
+//     else
+//   {
+//     alert("Invalid input. Please try again.");
+//   }
+
+//switch statement
+switch (true)
+    {
+    case (avg_rating >= 4.9):
+        alert("Best movie");
+        break
+    case (avg_rating >= 4.5):
+        alert("Must see");
+        break
+    case (avg_rating >= 4.0):
+        alert("Watch at least once");
+        break
+    case (avg_rating < 4.0):
+        alert("Find a different movie");
+        break
+    default :
+        alert("Invalid input. Please try again.");
+    }
+  </script>
+</body>
+</html>

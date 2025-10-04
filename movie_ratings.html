@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Rating</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      color: #ffde59;
+      text-shadow: 0 0 10px rgba(255, 222, 89, 0.8);
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px 40px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      max-width: 600px;
+      width: 90%;
+      animation: fadeIn 1.5s ease;
+    }
+
+    .movie-title {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #ffde59;
+    }
+
+    .rating {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .category {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 15px 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    .emoji {
+      font-size: 2em;
+      margin-top: 10px;
+      display: block;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 1em;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(90deg, #ff6b6b, #ffde59);
+      color: #24243e;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(255, 222, 89, 0.5);
+    }
+
+    .history {
+      margin-top: 30px;
+      text-align: left;
+      display: none; /* hidden until user rates */
+    }
+
+    .history h2 {
+      font-size: 1.5em;
+      color: #ffde59;
+      text-shadow: 0 0 8px rgba(255, 222, 89, 0.7);
+      margin-bottom: 10px;
+    }
+
+    .history-entry {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ff6b6b, 0 0 10px #ff6b6b; }
+      to { text-shadow: 0 0 15px #ffde59, 0 0 30px #ff6b6b; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🍿 Movie Rating Game 🎬</h1>
+    <div id="content">
+      <p>Welcome! Ready to find out if your favorite movies are <strong>Smokin'</strong>, <strong>Pretty Hot</strong>, <strong>Mild</strong>, or <strong>Ice Cold</strong>? 😎</p>
+      <button class="btn" onclick="rateMovie()">Start Rating Movies</button>
+    </div>
+
+    <div class="history" id="history">
+      <h2>Rating History</h2>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // Load history from localStorage
+    let history = JSON.parse(localStorage.getItem("movieRatings")) || [];
+
+    function renderHistory() {
+      const historyDiv = document.getElementById("history");
+      const historyList = document.getElementById("history-list");
+
+      historyList.innerHTML = "";
+      if (history.length > 0) {
+        historyDiv.style.display = "block"; // show history
+        history.forEach(entry => {
+          let div = document.createElement("div");
+          div.className = "history-entry";
+          div.innerHTML = `<strong>${entry.title}</strong> — ${entry.average}% (${entry.category}) ${entry.symbol}`;
+          historyList.prepend(div);
+        });
+      }
+    }
+
+    function rateMovie() {
+      let movieTitle = prompt("Enter a movie title:");
+      if (!movieTitle) return;
+
+      let total = 0;
+      let numUsers = 3;
+
+      for (let i = 1; i <= numUsers; i++) {
+        let rating = parseFloat(prompt("User " + i + ", enter your rating (0-100) for " + movieTitle + ":"));
+        if (isNaN(rating) || rating < 0 || rating > 100) {
+          alert("Invalid rating. Please enter a number between 0 and 100.");
+          i--;
+          continue;
+        }
+        total += rating;
+      }
+
+      let average = (total / numUsers).toFixed(2);
+
+      let category = "";
+      let symbol = "";
+      if (average >= 90) {
+        category = "Smokin'";
+        symbol = "🌶️🌶️🌶️";
+      } else if (average >= 75) {
+        category = "Pretty Hot";
+        symbol = "🌶️🌶️";
+      } else if (average >= 50) {
+        category = "Mild";
+        symbol = "🌶️";
+      } else {
+        category = "Ice Cold";
+        symbol = "🧊";
+      }
+
+      // Replace welcome text with results + new button
+      document.getElementById("content").innerHTML = `
+        <div class="movie-title">${movieTitle}</div>
+        <div class="rating">Average Rating: <strong>${average}%</strong></div>
+        <div class="category">${category}</div>
+        <div class="emoji">${symbol}</div>
+        <button class="btn" onclick="rateMovie()">🎬 Rate Another Movie</button>
+      `;
+
+      // Save to history
+      let entry = { title: movieTitle, average, category, symbol };
+      history.push(entry);
+      localStorage.setItem("movieRatings", JSON.stringify(history));
+
+      renderHistory();
+    }
+
+    // Render any stored history immediately
+    renderHistory();
+  </script>
+</body>
+</html>
